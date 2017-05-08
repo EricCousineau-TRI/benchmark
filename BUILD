@@ -1,3 +1,4 @@
+"""
 cc_library(
     name = "benchmark",
     srcs = [
@@ -40,5 +41,23 @@ cc_library(
     visibility = ["//test:__pkg__"],
     defines = ["HAVE_POSIX_REGEX"],
     includes = ["include"],
+    linkopts = ["-pthread"],
+)
+"""
+
+# Modified from: https://github.com/google/benchmark/issues/191
+cc_library(
+    name = "benchmark",
+    srcs = glob(["src/*.cc"],
+                exclude = ["src/re_posix.cc", "src/gnuregex.cc"]),
+    hdrs = glob(["src/*.h", "include/benchmark/*.h"],
+                exclude = ["src/re_posix.h", "src/gnuregex.h"]),
+    includes = [
+         "include",
+    ],
+    visibility = ["//visibility:public"],
+    defines = [
+          "HAVE_STD_REGEX"
+    ],
     linkopts = ["-pthread"],
 )
